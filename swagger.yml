@@ -1,0 +1,357 @@
+swagger: '2.0'
+info:
+  version: '1.0'
+  title: Swagger API
+  contact: {}
+host: api.userede.com.br
+basePath: /
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /desenvolvedores/v1/transactions/{tid}/refunds/{refundId}:
+    get:
+      description: Consulta de cancelamento por refundId.
+      summary: refund list
+      operationId: refundlist
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: tid
+        in: path
+        required: true
+        type: string
+        description: ''
+      - name: refundId
+        in: path
+        required: true
+        type: string
+        description: ''
+      responses:
+        200:
+          description: OK
+          headers: {}
+      security: []
+  /desenvolvedores/v1/transactions/{tid}:
+    get:
+      description: Consulta da transação por TID.
+      summary: captura
+      operationId: captura
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: tid
+        in: path
+        required: true
+        type: string
+        description: ''
+      responses:
+        200:
+          description: OK
+          headers: {}
+      security: []
+    put:
+      description: Confirma a autorização da transação (captura).
+      summary: captura
+      operationId: Putcaptura
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: tid
+        in: path
+        required: true
+        type: string
+        description: ''
+      - name: body
+        in: body
+        required: true
+        description: ''
+        schema:
+          type: object
+      responses:
+        200:
+          description: OK
+          headers: {}
+      security: []
+  /desenvolvedores/v1/transactions/{tid}/refunds:
+    get:
+      description: Consulta de cancelamento por tid.
+      summary: refunds_tid
+      operationId: refunds_tid
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: tid
+        in: path
+        required: true
+        type: string
+        description: ''
+      responses:
+        200:
+          description: OK
+          headers: {}
+      security: []
+    post:
+      description: Realiza o cancelamento da transação.
+      summary: refund
+      operationId: refund
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: tid
+        in: path
+        required: true
+        type: string
+        description: ''
+      - name: body
+        in: body
+        required: true
+        description: ''
+        schema:
+          type: object
+      responses:
+        204:
+          description: No Content
+          headers: {}
+      security: []
+  /desenvolvedores/v1/transactions/:
+    post:
+      description: A autorização é o primeiro passo para realizar uma transação.
+      summary: transação
+      operationId: transação
+      deprecated: false
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      parameters:
+      - name: Transaction
+        in: formData
+        required: false
+        type: string
+        description: ''
+      - name: Transaction3DSRede
+        in: formData
+        required: false
+        type: string
+        description: ''
+      - name: Transaction3DSClient
+        in: formData
+        required: false
+        type: string
+        description: ''
+      responses:
+        204:
+          description: No Content
+          headers: {}
+      security: []
+    get:
+      description: Consulta da transação por reference.
+      summary: transação_reference
+      operationId: transação_reference
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: reference
+        in: query
+        required: true
+        type: string
+        description: ''
+      responses:
+        200:
+          description: OK
+          headers: {}
+      security: []
+definitions:
+  urlsThreeDSecureRede:
+    title: urlsThreeDSecureRede
+    type: object
+    properties:
+      kind:
+        example: threeDSecureSuccess
+        type: string
+        default: threeDSecureSuccess
+      url:
+        example: https://redirecturl.com/3ds/success
+        type: string
+        default: https://redirecturl.com/3ds/success
+  threeDSecureRede:
+    title: threeDSecureRede
+    type: object
+    properties:
+      embedded:
+        example: true
+        type: boolean
+        default: true
+      onFailure:
+        example: decline
+        type: string
+        default: decline
+      userAgent:
+        example: Mozilla/5.0 (iPad; U; CPU OS 3_2_1 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Mobile/7B405
+        type: string
+        default: Mozilla/5.0 (iPad; U; CPU OS 3_2_1 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Mobile/7B405
+  RefundRequest:
+    title: RefundRequest
+    type: object
+    properties:
+      amount:
+        example: 1000
+        type: number
+        default: 1000
+        format: double
+  Transaction3DSClientRequest:
+    title: Transaction3DSClientRequest
+    type: object
+    properties:
+      amount:
+        example: 1000
+        type: number
+        default: 1000
+        format: double
+      cardNumber:
+        example: 5448280000000007
+        type: string
+        default: "5448280000000007"
+      cardholderName:
+        example: Pedro da Silva
+        type: string
+        default: Pedro da Silva
+      expirationMonth:
+        example: 12
+        type: number
+        default: 12
+        format: double
+      expirationYear:
+        example: 2020
+        type: number
+        default: 2020
+        format: double
+      reference:
+        example: pedido12321
+        type: string
+        default: pedido12321
+      securityCode:
+        example: 123
+        type: string
+        default: "123"
+      threeDSecure:
+        $ref: '#/definitions/threeDSecureClient'
+  Transaction3DSRedeRequest:
+    title: Transaction3DSRedeRequest
+    type: object
+    properties:
+      kind:
+        example: debit
+        type: string
+        default: debit
+      capture:
+        example: false
+        type: boolean
+        default: false
+      reference:
+        example: pedido2
+        type: string
+        default: pedido2
+      amount:
+        example: 1000
+        type: number
+        default: 1000
+        format: double
+      cardholderName:
+        example: Pedro da Silva
+        type: string
+        default: Pedro da Silva
+      cardNumber:
+        example: 2223000148400010
+        type: string
+        default: "2223000148400010"
+      expirationMonth:
+        example: 12
+        type: number
+        default: 12
+        format: double
+      expirationYear:
+        example: 2020
+        type: number
+        default: 2020
+        format: double
+      securityCode:
+        example: 123
+        type: string
+        default: "123"
+      threeDSecure:
+        $ref: '#/definitions/threeDSecureRede'
+      urls:
+        type: array
+        items:
+          $ref: '#/definitions/urlsThreeDSecureRede'
+  threeDSecureClient:
+    title: threeDSecureClient
+    type: object
+    properties:
+      cavv:
+        example: BwABBylVaQAAAAFwllVpAAAAAAA=
+        type: string
+        default: BwABBylVaQAAAAFwllVpAAAAAAA=
+      eci:
+        example: 05
+        type: string
+        default: "05"
+      embedded:
+        example: false
+        type: boolean
+        default: false
+      xid:
+        example: Nmp3VFdWMlEwZ05pWGN3SGo4TDA=
+        type: string
+        default: Nmp3VFdWMlEwZ05pWGN3SGo4TDA=
+  TransactionRequest:
+    title: TransactionRequest
+    type: object
+    properties:
+      capture:
+        example: false
+        type: boolean
+        default: false
+      reference:
+        example: pedido1
+        type: string
+        default: pedido1
+      amount:
+        example: 1000
+        type: number
+        default: 1000
+        format: double
+      cardNumber:
+        example: 5448280000000007
+        type: string
+        default: "5448280000000007"
+      expirationMonth:
+        example: 12
+        type: number
+        default: 12
+        format: double
+      expirationYear:
+        example: 2020
+        type: number
+        default: 2020
+        format: double
+      cardholderName:
+        example: Pedro da Silva
+        type: string
+        default: Pedro da Silva
+      securityCode:
+        example: 123
+        type: string
+        default: "123"
+tags: []
